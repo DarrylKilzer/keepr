@@ -26,7 +26,19 @@ export default {
       let action = 'return user associated keeps'
       Keeps.find({ userId: req.session.uid })
         .then(keeps => {
-          keeps = keeps
+          res.send(handleResponse(action, keeps))
+        }).catch(error => {
+          return next(handleResponse(action, null, error))
+        })
+    }
+  },
+   getKeepsByTag: {
+    path: '/keeps/:tag',
+    reqType: 'get',
+    method(req, res, next) {
+      let action = 'return user associated keeps'
+      Keeps.find({ tags: req.params.tag })
+        .then(keeps => {
           res.send(handleResponse(action, keeps))
         }).catch(error => {
           return next(handleResponse(action, null, error))
