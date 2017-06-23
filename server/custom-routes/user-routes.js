@@ -9,7 +9,7 @@ export default {
       let action = 'return vault and associated keeps'
       Vaults.findById(req.params.vaultId)
         .then(vault => {
-          Lists.find({ vaultId: req.params.vaultId })
+          Keeps.find({vaults: req.params.vaultId})
             .then(keeps => {
               vault.keeps = keeps
               res.send(handleResponse(action, vault.keeps))
@@ -20,7 +20,7 @@ export default {
     }
   },
   getKeepsByUserId: {
-    path: '/userkeeps/',
+    path: '/userkeeps',
     reqType: 'get',
     method(req, res, next) {
       let action = 'return user associated keeps'
