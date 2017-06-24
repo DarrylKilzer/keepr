@@ -39,7 +39,15 @@ export default {
       let action = 'return user associated keeps'
       Keeps.find({ tags: req.params.tag })
         .then(keeps => {
-          res.send(handleResponse(action, keeps))
+          var publicKeeps = []
+          for (var i = 0; i < keeps.length; i++) {
+            var keep = keeps[i]
+            if (keep.private == false) {
+              publicKeeps.push(keep)
+            }
+          }
+          publicKeeps.push({ name: "keep" })
+          res.send(handleResponse(action, publicKeeps))
         }).catch(error => {
           return next(handleResponse(action, null, error))
         })
