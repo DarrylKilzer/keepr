@@ -1,4 +1,9 @@
 import axios from 'axios'
+import router from '../router'
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
 
 let api = axios.create({
   baseURL: 'http://localhost:3000/api/',
@@ -6,11 +11,17 @@ let api = axios.create({
   withCredentials: true
 })
 
+let auth = axios.create({
+  baseURL: 'http://localhost:3000/',
+  timeout: 2000,
+  withCredentials: true
+})
+
 // REGISTER ALL DATA HERE
 let state = {
   user: {},
-  myVaults: {},
-  myKeeps: {},
+  vaults: [],
+  myKeeps: [],
   //Dummy Data
   keeps: [{
     title: 'Learn to Draw',
@@ -68,12 +79,83 @@ let handleError = (err) => {
   state.error = err
 }
 
-export default {
+export default new Vuex.Store({
   // ALL DATA LIVES IN THE STATE
   state,
   // ACTIONS ARE RESPONSIBLE FOR MANAGING ALL ASYNC REQUESTS
+  mutations: {
+    setKeeps(state, keeps){
+      state.keeps = keeps
+    },
+    setVaults(state, vaults){
+      state.vaults = vaults
+    },
+    setMyKeeps(state, myKeeps){
+      state.myKeeps = myKeeps
+    },
+    setUser(state, user){
+      state.user = user
+    }
+  },
   actions: {
+    getKeeps({commit, dispatch}) {
+      api('keeps')
+      .then(res =>{
+        commit('setKeeps', res.data)
+      })
+      .catch(handleError)
+    },
+    getMyKeeps({commit, dispatch}) {
+      api('userkeeps')
+      .then(res =>{
+        commit('setMyKeeps', res.data)
+      })
+      .catch(handleError)
+    },
+    getVaults({commit, dispatch}) {
+      api('vaults')
+      .then(res =>{
+        commit('setVaults', res.data)
+      })
+      .catch(handleError)
+    },
+     register({commit, dispatch}, user) {
+      auth.post('register', user)
+        .then(res => {
+          if (res.data.error) {
+            return handleError(res.data.error)
+          }
+          commit('setUser', res.data.data)
+          router.push('/vaults')
+        })
+        .catch(handleError)
+    },
+    login({commit, dispatch}, user) {
+      auth.post('login', user)
+        .then(res => {
+          commit('setUser', res.data.data)
+          router.push('/vaults')
+        }).catch(handleError)
+    },
+    getAuth({commit, dispatch}) {
+      auth('authenticate')
+        .then(res => {
+          commit('setUser', res.data.data)
+          if (state.user === null) {
+            router.push('/login')
+          } else {
+            router.push('/vaults')
+          }
+        }).catch(err => {
+          router.push('/login')
+        })
+    },
+    logout({commit, dispatch}, user) {
+      auth.delete('logout', user)
+        .then(res => {
+          router.push('/')
+        }).catch(handleError)
+    }
   }
-
-}
+})
 
