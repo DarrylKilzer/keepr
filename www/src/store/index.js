@@ -20,7 +20,7 @@ let auth = axios.create({
 // REGISTER ALL DATA HERE
 let state = {
   user: {},
-  vaults: [],
+  vaults: [{title: 'vault', description: 'sdasdasas'}],
   myKeeps: [],
   //Dummy Data
   keeps: [{
@@ -101,21 +101,21 @@ export default new Vuex.Store({
     getKeeps({commit, dispatch}) {
       api('keeps')
       .then(res =>{
-        commit('setKeeps', res.data)
+        commit('setKeeps', res.data.data)
       })
       .catch(handleError)
     },
     getMyKeeps({commit, dispatch}) {
       api('userkeeps')
       .then(res =>{
-        commit('setMyKeeps', res.data)
+        commit('setMyKeeps', res.data.data)
       })
       .catch(handleError)
     },
     getVaults({commit, dispatch}) {
-      api('vaults')
+      api('uservaults')
       .then(res =>{
-        commit('setVaults', res.data)
+        commit('setVaults', res.data.data)
       })
       .catch(handleError)
     },
@@ -134,17 +134,18 @@ export default new Vuex.Store({
       auth.post('login', user)
         .then(res => {
           commit('setUser', res.data.data)
-          router.push('/vaults')
+          router.push('/dashboard')
         }).catch(handleError)
     },
     getAuth({commit, dispatch}) {
       auth('authenticate')
         .then(res => {
           commit('setUser', res.data.data)
+          console.log(state.user)
           if (state.user === null) {
             router.push('/login')
           } else {
-            router.push('/vaults')
+            router.push('/dashboard')
           }
         }).catch(err => {
           router.push('/login')

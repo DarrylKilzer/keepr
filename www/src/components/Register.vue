@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 #register {
-  background-color: black;
+  background-color: #121210;
 }
 
 h4 {

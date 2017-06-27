@@ -19,6 +19,19 @@ export default {
         })
     }
   },
+  getVaultsByUserId: {
+    path: '/uservaults',
+    reqType: 'get',
+    method(req, res, next) {
+      let action = 'return user associated keeps'
+      Vaults.find({ creatorId: req.session.uid })
+        .then(vaults => {
+          res.send(handleResponse(action, vaults))
+        }).catch(error => {
+          return next(handleResponse(action, null, error))
+        })
+    }
+  },
   getKeepsByUserId: {
     path: '/userkeeps',
     reqType: 'get',
