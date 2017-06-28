@@ -89,6 +89,9 @@ export default new Vuex.Store({
     setKeeps(state, keeps) {
       state.keeps = keeps
     },
+    setNewKeep(state, keep) {
+      state.keeps.push(keep)
+    },
     setVaults(state, vaults) {
       state.vaults = vaults
     },
@@ -142,10 +145,10 @@ export default new Vuex.Store({
         .catch(handleError)
     },
     removeVault({ commit, dispatch }, vault) {
-      api.delete('vaults/'+ vault._id)
-          .then(res => {
-            dispatch('getVaults')
-          })
+      api.delete('vaults/' + vault._id)
+        .then(res => {
+          dispatch('getVaults')
+        })
         .catch(handleError)
     },
     createVault({ commit, dispatch }, vault) {
@@ -164,9 +167,12 @@ export default new Vuex.Store({
     createKeep({ commit, dispatch }, keep) {
       api.post('keeps', keep)
         .then(res => {
-          dispatch(getKeeps)
+          commit('setNewKeep', res.data.data)
             .then(res => {
-              commit('setKeeps', res.data.data)
+              dispatch(getKeeps)
+                .then(res => {
+                  commit('setKeeps', res.data.data)
+                })
             })
         })
         .catch(handleError)

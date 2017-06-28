@@ -5,19 +5,20 @@
       </div>
       <div class="col-xs-6">
         <p class="logout pull-right">
+          <router-link :to="'/dashboard'">
+            <button class="logout">Dashboard</button>
+          </router-link>
           <button class="logout" @click="logout(user)">Logout</button>
         </p>
       </div>
     </div>
-    <h2>Your Vaults</h2>
+    <h1>{{vault.title}}</h1>
+    <h2 class="header">Keeps</h2>
     <div class="row">
       <div v-for="keep in keeps">
         <div class="col-xs-6 col-sm-2">
-          <router-link :to="'/keeps/'+keep._id"><!--not needed-->
-            {{keep.title}}
-            {{keep.description}}
-          </router-link>
-            <img style="width: 200px" :src="keep.imgUrl">
+          {{keep.title}} {{keep.description}}
+          <img style="width: 200px" :src="keep.imgUrl">
         </div>
       </div>
     </div>
@@ -39,13 +40,18 @@
 </template>
 
 <script>
+import Keeps from './Keeps'
 export default {
   name: 'vault',
   data() {
     return {
       title: '',
-      description: '',
+      imageURL: 'sadas',
+      body: '',
+      tags: '',
+      articleURL: 'asda',
       creatorId: this.$store.state.user._id,
+      private: false,
       activeVault: this.$store.state.activeVault
     }
   },
@@ -62,11 +68,14 @@ export default {
   },
   methods: {
     createKeep() {
-      this.$store.dispatch('createKeep', { title: this.title, body: this.body, creatorId: this.creatorId,  })
+      this.$store.dispatch('createKeep', { title: this.title, imageURL: this.imageURL, body: this.body, tags: this.tags, articleURL: this.articleURL, creatorId: this.creatorId, private: this.private })
     },
     logout() {
       this.$store.dispatch('logout', this.user)
     }
+  },
+  components: {
+    Keeps
   }
 }
 </script>
@@ -80,6 +89,7 @@ export default {
 h1 {
   font-family: helvetica;
   font-size: 30px;
+  color: #fe0096;
 }
 
 h2 {

@@ -22,9 +22,9 @@ export default {
   text-align: center;
   color: black;
   margin-top: 60px;
-  background-color: #121210;
+  background-color: #fff;
 }
 body{
-  background-color: #121210;
+  background-color: #fff;
 }
 </style>
