@@ -1,8 +1,7 @@
 <template>
-  <div class="dashboard">
+  <div class="vault">
     <div class="row">
       <div class="col-xs-6">
-        <h1 class="capitalize">Hello, {{user.name}}!</h1>
       </div>
       <div class="col-xs-6">
         <p class="logout pull-right">
@@ -12,25 +11,27 @@
     </div>
     <h2>Your Vaults</h2>
     <div class="row">
-      <div v-for="vault in vaults">
+      <div v-for="keep in keeps">
         <div class="col-xs-6 col-sm-2">
-          <router-link :to="'/vaults/'+vault._id">
-            <button @click="activeVault(vault._id)" class="btn vault">{{vault.title}}</button>
+          <router-link :to="'/keeps/'+keep._id"><!--not needed-->
+            {{keep.title}}
+            {{keep.description}}
           </router-link>
+            <img style="width: 200px" :src="keep.imgUrl">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <h3>Create a new vault</h3>
-        <form @submit.prevent="createVault">
+        <h3>Create a new keep</h3>
+        <form @submit.prevent="createKeep">
           <div class="form-group">
-            <input type="text" class="form-control-small input-lg" v-model="title" placeholder="Vault Name" required>
+            <input type="text" class="form-control-small input-lg" v-model="title" placeholder="Keep Name" required>
           </div>
           <div class="form-group">
-            <textarea rows="4" cols="50" class="form-control-small input-lg" v-model="description" placeholder="Description"></textarea>
+            <textarea rows="4" cols="50" class="form-control-small input-lg" v-model="body" placeholder="Body"></textarea>
           </div>
-          <button class="btn btn vault" type="submit">Add Vault</button>
+          <button class="btn vault" type="submit">Add Keep</button>
         </form>
       </div>
     </div>
@@ -39,31 +40,29 @@
 
 <script>
 export default {
-  name: 'dashboard',
+  name: 'vault',
   data() {
     return {
       title: '',
       description: '',
-      creatorId: this.$store.state.user._id
+      creatorId: this.$store.state.user._id,
+      activeVault: this.$store.state.activeVault
     }
   },
-  created() {
-    this.$store.dispatch('getVaults')
+  mounted() {
+    this.$store.dispatch('getKeepsByVaultId', this.activeVault._id)
   },
   computed: {
-    vaults() {
-      return this.$store.state.vaults
+    keeps() {
+      return this.$store.state.keeps
     },
-    user() {
-      return this.$store.state.user
+    vault() {
+      return this.$store.state.activeVault
     }
   },
   methods: {
-    createVault() {
-      this.$store.dispatch('createVault', { title: this.title, description: this.description, creatorId: this.creatorId })
-    },
-    activeVault(vaultId) {
-      this.$store.dispatch('getActiveVault', vaultId)
+    createKeep() {
+      this.$store.dispatch('createKeep', { title: this.title, body: this.body, creatorId: this.creatorId,  })
     },
     logout() {
       this.$store.dispatch('logout', this.user)
@@ -107,7 +106,7 @@ p.logout {
 }
 
 button.vault {
-  font-size: 25px;
+  font-size: 18px;
   color: #000;
   font-weight: bold;
   font-family: Poppins;
@@ -115,7 +114,7 @@ button.vault {
   border-radius: 5px;
   border: 0px;
   padding: 10px;
-  width: 100%;
+  width: 10%;
   margin-bottom: 5px;
   transition-duration: 0.4s;
 }

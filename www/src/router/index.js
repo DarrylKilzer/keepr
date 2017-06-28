@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Vault from '@/components/Vault'
 
 
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+     {
+      path: '/vaults/:id',
+      name: 'Vault',
+      component: Vault
     },
     {
       path:'*',
