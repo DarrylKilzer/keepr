@@ -92,6 +92,9 @@ export default new Vuex.Store({
     setVaults(state, vaults) {
       state.vaults = vaults
     },
+    setNewVault(state, vault) {
+      state.vaults.push(vault)
+    },
     setActiveVault(state, activeVault) {
       state.activeVault = activeVault
     },
@@ -139,16 +142,10 @@ export default new Vuex.Store({
         .catch(handleError)
     },
     removeVault({ commit, dispatch }, vault) {
-      api.delete('vaults', vault._id)
-        .then(res => {
-          commit('removeVault', vault)
+      api.delete('vaults/'+ vault._id)
           .then(res => {
             dispatch('getVaults')
-            .then(res => {
-              commit('setVaults', res.data.data)
-            })
           })
-        })
         .catch(handleError)
     },
     createVault({ commit, dispatch }, vault) {
