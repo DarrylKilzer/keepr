@@ -13,6 +13,7 @@
       </div>
     </div>
     <h1>{{vault.title}}</h1>
+    <button @click="removeVault(vault)" class="btn-small">Delete</button>
     <h2 class="header">Keeps</h2>
     <div class="row">
       <div v-for="keep in keeps">
@@ -20,7 +21,7 @@
           <div class="thumbnail">
             <img src="https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAnSAAAAJDU1YzJmNDRmLWZkYjgtNDVjOS05YzdjLWRiMWJkMjQyNzgwYw.png">
             <div class="caption">
-              <h3>{{keep.title}}</h3>
+              <h3>{{keep.title}}{{keep.name}}</h3>
               <p>{{keep.body}}</p>
                 <button @click="removeKeep(keep)" class="btn-small">UnKeep</button>
             </div>
@@ -62,9 +63,11 @@ export default {
     }
   },
   methods: {
-    removeKeep(keep) {
-      updateKeep(keep)
-      this.$store.dispatch('getKeepsByVaultId', this.activeVault._id)
+    removeVault(vault) {
+      this.$store.dispatch('removeVault', vault)
+    },
+    removeKeep(keep, vault) {
+      this.$store.dispatch('getKeepsByVaultId',{keep: keep, vaultId: this.vault._id})
     },
     logout() {
       this.$store.dispatch('logout', this.user)

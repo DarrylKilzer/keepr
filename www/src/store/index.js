@@ -81,9 +81,9 @@ export default new Vuex.Store({
         })
         .catch(handleError)
     },
-    addKeepToVault({ commit, dispatch }, data) {
-      api.put('addToVaults/' + data.keep._id, data)
-        .then(res =>{
+    addToVault({ commit, dispatch }, data) {
+      api.put('addtovault/' + data.keep._id, data)
+        .then(res => {
           dispatch('getKeeps')
         })
         .catch(handleError)
@@ -106,8 +106,22 @@ export default new Vuex.Store({
       api.delete('vaults/' + vault._id)
         .then(res => {
           dispatch('getVaults')
+          router.push('/dashboard')
         })
         .catch(handleError)
+    },
+    removeKeep({ commit, dispatch }, data) {
+      api.put('keeps/' + data.keep._id, data)
+        .then(res => {
+          dispatch('getKeepsByVaultId')
+        })
+        .catch(handleError)
+    },
+    deleteKeep({ commit, dispatch }, keep){
+      console.log(keep)
+      api.delete('keeps/' + keep._id)
+      var keepIndex = state.keeps.indexOf(keep)
+      state.keeps.splice(keepIndex, 1)
     },
     createVault({ commit, dispatch }, vault) {
       api.post('vaults', vault)

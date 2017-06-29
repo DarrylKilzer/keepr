@@ -24,6 +24,7 @@
 <script>
 import Vaults from './Vaults'
 import Keeps from './Keeps'
+import MyKeeps from './MyKeeps'
 export default {
   name: 'dashboard',
   data() {
@@ -58,9 +59,6 @@ export default {
       this.title = ''
       this.description = ''
     },
-    removeVault(vault) {
-      this.$store.dispatch('removeVault', vault)
-    },
     activeVault(vaultId) {
       this.$store.dispatch('getActiveVault', vaultId)
     },
@@ -85,7 +83,8 @@ export default {
   },
   components: {
     Vaults,
-    Keeps
+    Keeps,
+    MyKeeps
   }
 }
 </script>

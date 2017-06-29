@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     addKeep(keep, vaultId) {
-      this.$store.dispatch('addKeepToVault', {keep: keep, vaultId: vaultId})
+      this.$store.dispatch('addToVault', {keep: keep, vaultId: vaultId})
     },
     logout() {
       this.$store.dispatch('logout', this.user)

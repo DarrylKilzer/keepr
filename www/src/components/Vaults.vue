@@ -8,7 +8,7 @@
             <button @click="activeVault(vault._id)" class="btn vault">{{vault.title}}</button>
             <p>{{vault.description}}</p>
           </router-link>
-          <button @click="removeVault(vault)" class="btn-small">Remove</button>
+          
         </div>
       </div>
     </div>

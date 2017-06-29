@@ -9,7 +9,7 @@
             <div class="caption">
               <h3>{{keep.title}}</h3>
               <p>{{keep.body}}</p>
-              <button v-if="this.showUnKeep" @click="removeKeep(keep)" class="btn-small">UnKeep</button>
+              <button @click="deleteKeep(keep)" class="btn-small btn-danger">Delete</button>
             </div>
           </div>
         </div>
@@ -37,8 +37,12 @@ export default {
   data() {
     return {
       title: '',
-      description: '',
-      creatorId: this.$store.state.user._id
+      imageURL: 'sadas',
+      body: '',
+      tags: '',
+      articleURL: 'asda',
+      creatorId: this.$store.state.user._id,
+      private: false
     }
   },
   mounted() {
@@ -65,7 +69,10 @@ export default {
       this.$store.dispatch('getKeepsByVaultId', this.activeVault._id)
     },
     updateKeep(keep) {
-      this.$store.dishpatch('updateKeep', keep)
+      this.$store.dispatch('updateKeep', keep)
+    },
+    deleteKeep(keep) {
+      this.$store.dispatch('deleteKeep', keep)
     },
     logout() {
       this.$store.dispatch('logout', this.user)
