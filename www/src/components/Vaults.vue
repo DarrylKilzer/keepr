@@ -6,6 +6,7 @@
         <div class="col-xs-6 col-sm-2">
           <router-link :to="'/vaults/'+vault._id">
             <button @click="activeVault(vault._id)" class="btn vault">{{vault.title}}</button>
+            <p>{{vault.description}}</p>
           </router-link>
           <button @click="removeVault(vault)" class="btn-small">Remove</button>
         </div>
@@ -40,7 +41,7 @@ export default {
       creatorId: this.$store.state.user._id
     }
   },
-  created() {
+  mounted() {
     this.$store.dispatch('getVaults')
   },
   computed: {

@@ -4,26 +4,47 @@
     <div class="row">
       <div v-for="keep in keeps">
         <div class="col-xs-6 col-sm-2">
-          <router-link :to="'/keeps/'+keep._id"><!--not needed-->
-            {{keep.title}}
-            {{keep.description}}
-          </router-link>
-            <img style="width: 200px" :src="keep.imgUrl">
+          <div class="thumbnail">
+            <img src="https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAnSAAAAJDU1YzJmNDRmLWZkYjgtNDVjOS05YzdjLWRiMWJkMjQyNzgwYw.png">
+            <div class="caption">
+              <h3>{{keep.title}}</h3>
+              <p>{{keep.body}}</p>
+              <button v-if="this.showUnKeep" @click="removeKeep(keep)" class="btn-small">UnKeep</button>
+              <button type="button" title="Add Keep" class="btn btn-default" @click="showAddKeep=true">Keep</button>
+              <transition name="modal" v-if="showAddKeep">
+                <div class="modal-mask">
+                  <div class="modal-wrapper">
+                    <div class="modal-container">
+                      <div class="modal-header">
+                        <slot name="vaults">Vaults</slot>
+                      </div>
+                      <div class="modal-body">
+                        <slot name="body">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-md-2">
+                                <div class="row">
+                                  <div class="col-md-12" v-for="vault in vaults">
+                                    <button @click="addKeep(keep, vault._id)" class="btn-small">{{vault.title}}</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </slot>
+                      </div>
+                      <div class="modal-footer">
+                        <slot name="footer">
+                          <button class="modal-default-button" @click="showAddKeep=false">Close</button>
+                        </slot>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <h3>Create a new keep</h3>
-        <form @submit.prevent="createKeep">
-          <div class="form-group">
-            <input type="text" class="form-control-small input-lg" v-model="title" placeholder="Keep Name" required>
-          </div>
-          <div class="form-group">
-            <textarea rows="4" cols="50" class="form-control-small input-lg" v-model="body" placeholder="Body"></textarea>
-          </div>
-          <button class="btn vault" type="submit">Add Keep</button>
-        </form>
       </div>
     </div>
   </div>
@@ -33,33 +54,30 @@ export default {
   name: 'dashboard',
   data() {
     return {
+      showAddKeep: false,
       title: '',
       description: '',
       creatorId: this.$store.state.user._id
     }
   },
-  created() {
+  mounted() {
     this.$store.dispatch('getVaults')
+    this.$store.dispatch('getKeeps')
   },
   computed: {
     vaults() {
       return this.$store.state.vaults
+    },
+    keeps() {
+      return this.$store.state.keeps
     },
     user() {
       return this.$store.state.user
     }
   },
   methods: {
-    createVault() {
-      this.$store.dispatch('createVault', { title: this.title, description: this.description, creatorId: this.creatorId })
-      this.title = ''
-      this.description = ''
-    },
-    removeVault(vault) {
-      this.$store.dispatch('removeVault', vault)
-    },
-    activeVault(vaultId) {
-      this.$store.dispatch('getActiveVault', vaultId)
+    addKeep(keep, vaultId) {
+      this.$store.dispatch('addKeepToVault', {keep: keep, vaultId: vaultId})
     },
     logout() {
       this.$store.dispatch('logout', this.user)

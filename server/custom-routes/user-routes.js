@@ -9,7 +9,7 @@ export default {
       let action = 'return vault and associated keeps'
       Vaults.findById(req.params.vaultId)
         .then(vault => {
-          Keeps.find({vaults: req.params.vaultId})
+          Keeps.find({ vaults: { $in: [req.params.vaulId] } })
             .then(keeps => {
               vault.keeps = keeps
               res.send(handleResponse(action, vault.keeps))
@@ -17,6 +17,19 @@ export default {
         }).catch(error => {
           return next(handleResponse(action, null, error))
         })
+    }
+  },
+  addKeepToVault: {
+    path: '/addToVaults/:keepId',
+    reqType: 'get',
+    method(req, res, next) {
+      let action = 'return vault and associated keeps'
+      Keeps.findById(req.params.keepId)
+        .then(keep => {
+          keep.vaults.push(req.body.vaultId)
+          keep.keepCount++
+        })
+        .catch(handleResponse)
     }
   },
   getVaultsByUserId: {
@@ -45,7 +58,7 @@ export default {
         })
     }
   },
-   getKeepsByTag: {
+  getKeepsByTag: {
     path: '/keeps/:tag',
     reqType: 'get',
     method(req, res, next) {

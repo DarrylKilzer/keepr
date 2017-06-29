@@ -17,23 +17,15 @@
     <div class="row">
       <div v-for="keep in keeps">
         <div class="col-xs-6 col-sm-2">
-          {{keep.title}} {{keep.description}}
-          <img style="width: 200px" :src="keep.imgUrl">
+          <div class="thumbnail">
+            <img src="https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAnSAAAAJDU1YzJmNDRmLWZkYjgtNDVjOS05YzdjLWRiMWJkMjQyNzgwYw.png">
+            <div class="caption">
+              <h3>{{keep.title}}</h3>
+              <p>{{keep.body}}</p>
+                <button @click="removeKeep(keep)" class="btn-small">UnKeep</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <h3>Create a new keep</h3>
-        <form @submit.prevent="createKeep">
-          <div class="form-group">
-            <input type="text" class="form-control-small input-lg" v-model="title" placeholder="Keep Name" required>
-          </div>
-          <div class="form-group">
-            <textarea rows="4" cols="50" class="form-control-small input-lg" v-model="body" placeholder="Body"></textarea>
-          </div>
-          <button class="btn vault" type="submit">Add Keep</button>
-        </form>
       </div>
     </div>
   </div>
@@ -45,18 +37,21 @@ export default {
   name: 'vault',
   data() {
     return {
+      showUnKeep: true,
       title: '',
       imageURL: 'sadas',
       body: '',
       tags: '',
       articleURL: 'asda',
       creatorId: this.$store.state.user._id,
-      private: false,
-      activeVault: this.$store.state.activeVault
+      private: false
     }
   },
+  created(){
+    this.$store.state.keeps = []
+  },
   mounted() {
-    this.$store.dispatch('getKeepsByVaultId', this.activeVault._id)
+    this.$store.dispatch('getKeepsByVaultId', this.$route.params.id)
   },
   computed: {
     keeps() {
@@ -67,8 +62,9 @@ export default {
     }
   },
   methods: {
-    createKeep() {
-      this.$store.dispatch('createKeep', { title: this.title, imageURL: this.imageURL, body: this.body, tags: this.tags, articleURL: this.articleURL, creatorId: this.creatorId, private: this.private })
+    removeKeep(keep) {
+      updateKeep(keep)
+      this.$store.dispatch('getKeepsByVaultId', this.activeVault._id)
     },
     logout() {
       this.$store.dispatch('logout', this.user)

@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-xs-6">
         <p class="logout pull-left">
+          <img style="width: 10%" src="../assets/logo.jpg">
           <button type="button" class="toggles" @click="toggleVaults">Vaults</button>
           <button class="toggles" @click="toggleKeeps">Your Keeps</button>
           <button class="toggles" @click="toggleAllKeeps">All Keeps</button>
@@ -15,24 +16,8 @@
         </p>
       </div>
       <vaults v-if="this.showVaults"></vaults>
-      <div v-if="this.showAllKeeps">
-        <h2 class="header">Keeps</h2>
-        <div class="row">
-          <div v-for="keep in keeps">
-            <div class="col-xs-6 col-sm-2">
-              <div class="thumbnail">
-                <img style="width: 200px" :src="keep.imgUrl">
-                <div class="caption">
-                  <h3>
-                    <router-link :to="'/keeps/'+keep._id">{{keep.title}}</router-link>
-                  </h3>
-                  <p>{{keep.body}}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <keeps v-if="this.showAllKeeps"></keeps>
+      <myKeeps v-if="this.showKeeps"></myKeeps>
     </div>
   </div>
 </template>
@@ -46,6 +31,7 @@ export default {
       showVaults: true,
       showKeeps: false,
       showAllKeeps: false,
+      showUnKeep: false,
       title: '',
       description: '',
       creatorId: this.$store.state.user._id
@@ -107,7 +93,7 @@ export default {
 <style scoped>
 .capitalize {
   text-transform: capitalize;
-  color: #fe0096;
+  color: black;
 }
 
 h1 {
