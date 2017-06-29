@@ -92,7 +92,6 @@ export default {
               publicKeeps.push(keep)
             }
           }
-          publicKeeps.push({ name: "keep" })
           res.send(handleResponse(action, publicKeeps))
         }).catch(error => {
           return next(handleResponse(action, null, error))
